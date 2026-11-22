@@ -3,6 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      window.addEventListener(
+        'error',
+        function (event) {
+          var src = event && event.filename ? String(event.filename) : '';
+          var stack = event && event.error && event.error.stack ? String(event.error.stack) : '';
+          if (src.indexOf('chrome-extension://') === 0 || stack.indexOf('chrome-extension://') !== -1) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+          }
+        },
+        true
+      );
+    </script>
     <title>Hopeful Lever — CSV Reader Speed Lab</title>
     <meta name="description" content="High-performance drop-in replacement for make.fun csv-reader 1.0.0 with live differential verification, benchmarks, and competition kit export." />
     <meta property="og:title" content="Hopeful Lever — CSV Reader Speed Lab" />
