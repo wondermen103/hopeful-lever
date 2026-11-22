@@ -1,0 +1,261 @@
+# csv-reader-speed-01-run-20261121: launched from competitions/csv-reader-speed-01, the bundle as its launch stored it (bundle_sha256 6a35685d320462fb0a864651472e2158f9ee49863a7c7096b0f84b0737947069).
+version: 1
+competition:
+  slug: csv-reader-speed-01-run-20261121
+  title: Read broken CSV files faster, 21 November 2026
+  summary: Write a faster drop-in for make.fun's own csv-reader 1.0.0 that answers exactly as it does on every case; places go by CPU time, least first, and beating csv-reader, the house baseline, at 95% confidence only qualifies an entry for a place.
+  description: |-
+    Read broken CSV files faster: write a faster drop-in for make.fun's own csv-reader 1.0.0, its reference program, that answers exactly as it does on every case. For each case's input the answer is csv-reader's reading of the case's input {text, header}, the JSON value {columns, rows, errors}. The text is read once, left to right, with commas and double quotes. A U+FEFF at its very start is dropped. A record ends at LF or CRLF, and a line left with no characters is no record. Outside quotes a CR not followed by LF is dropped (error stray_cr). A field that opens with a quote runs to the next quote that is not doubled, "" inside it one quote and each CRLF or lone CR inside it read as LF; what follows its closing quote, up to the next comma or line break, is appended as it stands (quote_junk, when the field ends); a quote that never closes is a literal character, and the text after it is read again as unquoted (unterminated_quote). A quote inside an unquoted field is a literal character. Fields stay strings, never trimmed or converted. columns is the first record when header is true, else null; rows holds the records after it (every record when header is false), each padded with empty strings (short_row, with fields: its field count) or cut (long_row, with extra: the cut fields) to the first record's width. Each error is {code, line, row}, in the order met, a record's short_row or long_row when it ends: line the 1-based line its record starts on, counting every LF, CRLF and lone CR inside quotes, and row its record's index in rows, null for the header. Peak memory is not scored: it is capped by the sandbox's memory limit, and the contest ranks CPU time alone.
+
+    ## Context
+    Each entry is solve.js, an ES module whose run(input) returns csv-reader's answer for every input, and main.ts, the program the harness runs, which answers every case with it. A set holds 6 cases, each drawn from a public drand round by the published generator. An entry must answer every case exactly before its speed counts; the fastest entries that do are then timed on CPU time in a heat, and the least CPU time wins.
+
+    Before the deadline your entries run on the practice set, drawn from a round emitted before the competition opened and published in the kit. The final ranking runs every entry on a set drawn from round 34199652, the first emitted once the final phase starts.
+
+    ## Requirements
+    - Node 22 runs node /bot/main.ts: JavaScript or TypeScript source only, nothing installed before the program runs, no WebAssembly, native addon or prebuilt binary
+    - Every answer identical to csv-reader 1.0.0's, each case answered alone, nothing cached from one case to the next
+    - A reward needs a CPU time faster than csv-reader 1.0.0, the house baseline, in the final heat at 95% confidence (one-sided, over the repeated timed runs)
+  rules: |-
+    ## The task
+    Write solve.js, a dependency-free ES module in your repository's root whose run(input) returns, for every case's input, exactly the answer csv-reader 1.0.0 returns: csv-reader's reading of the case's input {text, header}, the JSON value {columns, rows, errors}. The text is read once, left to right, with commas and double quotes. A U+FEFF at its very start is dropped. A record ends at LF or CRLF, and a line left with no characters is no record. Outside quotes a CR not followed by LF is dropped (error stray_cr). A field that opens with a quote runs to the next quote that is not doubled, "" inside it one quote and each CRLF or lone CR inside it read as LF; what follows its closing quote, up to the next comma or line break, is appended as it stands (quote_junk, when the field ends); a quote that never closes is a literal character, and the text after it is read again as unquoted (unterminated_quote). A quote inside an unquoted field is a literal character. Fields stay strings, never trimmed or converted. columns is the first record when header is true, else null; rows holds the records after it (every record when header is false), each padded with empty strings (short_row, with fields: its field count) or cut (long_row, with extra: the cut fields) to the first record's width. Each error is {code, line, row}, in the order met, a record's short_row or long_row when it ends: line the 1-based line its record starts on, counting every LF, CRLF and lone CR inside quotes, and row its record's index in rows, null for the header. Peak memory is not scored: it is capped by the sandbox's memory limit, and the contest ranks CPU time alone. Write main.ts, the program the harness runs, which reads every case from /input/cases.json, answers each with run, and writes /output/answers.json. The house baseline (baseline/csv-reader/, in the kit) is csv-reader 1.0.0 itself behind that driver: read it, then write your own faster solve.js. A correct entry is a faster drop-in for csv-reader.
+
+    ## The reference
+    Every case's expected answer is make.fun's own csv-reader's: what csv-reader 1.0.0, make.fun's own reference program, returns for its input. It is make.fun's own code (MIT), derived from d3-dsv 3.0.2 (ISC, https://registry.npmjs.org/d3-dsv/-/d3-dsv-3.0.2.tgz) and papaparse 5.7.1 (MIT, https://registry.npmjs.org/papaparse/-/papaparse-5.7.1.tgz), and is kept in the generator and in the house baseline (baseline/csv-reader/) as vendor/csv-reader/, with its LICENSE and a NOTICE carrying each upstream's licence and copyright line word for word, and a SOURCE.txt of what it derives from.
+
+    Faster public tools for this task exist, and the house names them plainly:
+    - Rust csv (https://github.com/BurntSushi/rust-csv): Its author's xsv, built on it, counts every record of a 1,000,000-row CSV at 413.76 MB/sec (xsv's BENCHMARKS.md, https://github.com/BurntSushi/xsv/blob/master/BENCHMARKS.md).
+    - qsv (https://github.com/dathere/qsv): Built on the Rust csv crate, it indexes the million-row, 41-column, 520 MB NYC 311 benchmark file, reading every record of it, in 466 ms (its docs/PERFORMANCE.md).
+    - papaparse (https://github.com/mholt/PapaParse): papaparse 5.7.1 (JavaScript, MIT), wrapped as an entry with V8's incremental marking off as the house driver runs, read twelve of this home's drawn sets (10.2 to 11.8 MB of CSV each) in 0.78 s of CPU on average against csv-reader's 1.38 s, under gVisor at 1 CPU on a rented box; it reads broken rows its own way, so its answers are not csv-reader's.
+    - d3-dsv (https://github.com/d3/d3-dsv): d3-dsv 3.0.2's csvParseRows (JavaScript, ISC), wrapped as an entry with V8's incremental marking off as the house driver runs, read twelve of this home's drawn sets (10.2 to 11.8 MB of CSV each) in 0.73 s of CPU on average against csv-reader's 1.38 s, under gVisor at 1 CPU on a rented box; it reads broken rows its own way, so its answers are not csv-reader's.
+    - csv-parser (https://github.com/mafintosh/csv-parser): csv-parser 3.2.1 (JavaScript, MIT), wrapped as an entry with V8's incremental marking off as the house driver runs, read twelve of this home's drawn sets (10.2 to 11.8 MB of CSV each) in 0.72 s of CPU on average against csv-reader's 1.38 s, under gVisor at 1 CPU on a rented box; it reads broken rows its own way and reports no errors, so its answers are not csv-reader's.
+
+    This contest is scored against csv-reader's exact output and its CPU time, not against those tools: every answer must be identical to csv-reader's, and its speed is measured against csv-reader 1.0.0 in this contest's own timing heat. The house ran papaparse and d3-dsv, public drop-ins each wrapped as an entry, and each misses the gate: a public tool's output is not csv-reader's.
+
+    A reward needs beating csv-reader, the house baseline, at 95% confidence (one-sided, over the repeated timed runs of the final heat).
+
+    ## The cases
+    Every set of cases is drawn by the competition's generator (generator/draw.ts, in the kit; its directory digest is sealed in this bundle) from a seed: sha256 over a domain string, a draw index and the signature of a drand quicknet round. A set holds 6 drawn cases (g-0001 onwards), each drawn by the subject's generator from a stream of its own. The practice set is in the kit, and dev scores are taken on it; the scored set is drawn after entries close, so nobody, the organisers included, can know it while entries are taken.
+
+    ## Input and output
+    - /input/cases.json: a JSON array of {"id", "input"}, the cases in order
+    - /output/answers.json: a JSON array of the answers, one per case in the cases' order. Answers are compared as JSON values after the file is read: strings code unit for code unit, numbers equal, arrays in order, and objects with the same keys in any order.
+
+    ## The gate: identical answers
+    The scorer (scorer/main.ts, in the kit) compares each answer with csv-reader's. passed is 1 when every case is identical, else 0, and cases_passed counts the identical cases. Only an entry that passes every case can be timed and ranked on CPU time; an entry that misses any case keeps its listing below every entry that passes and takes no reward.
+
+    ## Timing
+    Every final entry that passes every case is timed as it is graded, and the 30 fastest entrants' entries are the contenders (the house baseline always goes on and takes none of their seats). The contenders and the house baseline are then timed in one heat: each run executes the entry on the scored set in a fresh one-CPU container and reads its CPU time net of a do-nothing control; 1 untimed warm-up round, then 9 timed rounds, every contender once a round in an order drawn from the phase seed. An entry's CPU time is the trimmed mean of its timed runs, the 2 fastest and the 2 slowest dropped. The paid places and 2 more then race 30 more rounds among themselves. Every run must write the graded outputs byte for byte.
+
+    ## Ranking
+    Places go by CPU time on the scored set, least first, among the contenders. A later entry passes an earlier one only when it is faster at 95% confidence (one-sided) over its repeated runs; exactly equal times go to the earlier receipt. Beating csv-reader 1.0.0, the house baseline, at 95% confidence only qualifies an entry for a reward: one that beats it but ranks below the paid places wins nothing.
+
+    ## Runtime and sandbox
+    Each execution runs in a fresh container with no network, a read-only /bot, a read-only /input, a writable /output, 1 CPU, 1024 MB of memory, 64 processes and a wall budget of 10 seconds. Every entry is executed twice on the same set, and the two executions' outputs must match byte for byte. The house baseline's main.ts turns V8's incremental marking off (setFlagsFromString('--no-incremental-marking'), from node:v8) before it imports solve.js, and is timed with it; an entry may tune V8's flags the same way.
+
+    ## Your repository
+    An entry's repository holds at most 1 MiB (1,048,576 bytes), all its files together, every one counted, to bound lookup tables; a larger one is refused before it is graded. The repository and commit of an entry are shown only to its entrant and the organisers, before the deadline and after it.
+
+    ## Schedule
+    - Entries open at 2026-11-21T02:42:00Z and close at the deadline, 2026-11-23T02:42:00Z (UTC).
+    - The final phase starts at 2026-11-23T02:52:00Z, 10 minutes after the deadline, and ends at 2026-11-24T02:42:00Z. The scored instance is drawn from drand quicknet round 34199652, the first emitted at or after the final phase starts, so nobody, the organisers included, can know it while entries are open.
+
+    ## Rewards
+    - 1st to 10th place: $10 each
+
+    The rewards total $100 over 10 places.
+
+    An entry takes a reward only by beating the house baseline. The house baseline is a house bot, an entry make.fun enters itself, and it ranks in the heat like any other entry. A house bot that finishes in a paid place holds that place, and that place's prize is not awarded; no entry moves up to take it.
+
+    ## The next run
+    The first place's entry, under its own licence, is entered as the house baseline of this bounty's next run, where its code, as every house entry's, shows to make.fun's admins only.
+  category: Code
+  skills:
+    - JavaScript
+    - Performance
+  status: open
+  visibility: public
+  sponsor: make-fun
+  reward_usd: 100
+  opens_at: 2026-11-21T02:42:00Z
+  deadline: 2026-11-23T02:42:00Z
+  resolution:
+    method: metric
+    summary: The least CPU time on the scored set among the contenders whose answers match csv-reader 1.0.0's on every case wins; places go by CPU time, least first, and beating csv-reader, the house baseline, at 95% confidence only qualifies an entry for a place.
+    criteria:
+      - "Harness: program/v1 in a sandbox with no network, each entry executed twice; the two executions' outputs must match byte for byte"
+      - "Gate: every answer identical to csv-reader 1.0.0's; an entry that misses any case ranks below every entry that passes"
+      - "Ranking: CPU time net of the null-entry control, the trimmed mean of 9 timed runs after 1 untimed, lower first; a later entry passes an earlier one only when faster at 95% confidence"
+      - "Beat the baseline: a reward goes only to an entry faster than csv-reader, the house baseline, at 95% confidence"
+    source: The scored set drawn by generator/draw.ts from the scored drand round, each entry's /output/answers.json and the timing heat's record of every run
+    verifier: make.fun grader executes every entry twice, runs the bundle's scorer on its outputs, names the contenders and times them in a CPU-time heat
+    tie_break: Exactly equal CPU times go to the earlier receipt, and a later entry passes an earlier one only when it is faster at 95% confidence over the repeated runs
+    announce: Scores appear when the results publish themselves
+    metric:
+      name: CPU time
+      unit: µs
+      better: lower
+harness:
+  kind: program/v1
+  runtimes:
+    - node22
+  input_data: null
+  scorer:
+    runtime: node22
+    entrypoint: scorer/main.ts
+    reference_data: null
+  generator:
+    runtime: node22
+    entrypoint: generator/draw.ts
+  scorer_sha256: 98d5f96f07e6794d494e0d1f51336fc4ee67ec10f2bcb666d3c28ddd45a6074b
+  generator_sha256: 614af83b3bdd490dac49410f4330703cf2a8582342e3d6adf5e7d3d15e8f69dd
+  gate: passed
+  timing:
+    rounds: 9
+    warmup_rounds: 1
+    trim: 2
+    playoff_rounds: 30
+    playoff_extra_places: 2
+    interval_level: "0.900000000"
+    staged:
+      contenders: 30
+  max_entry_bytes: 1048576
+phases:
+  - key: dev
+    title: Practice set
+    description: ""
+    starts_at: 2026-11-21T02:42:00Z
+    ends_at: 2026-11-23T02:42:00Z
+    dataset: null
+    scores: live
+  - key: final
+    title: Scored set
+    description: ""
+    starts_at: 2026-11-23T02:52:00Z
+    ends_at: 2026-11-24T02:42:00Z
+    dataset: null
+    scores: after_finalize
+leaderboard:
+  title: Results
+  primary_index: 0
+  columns:
+    - key: cpu_us
+      title: CPU time (µs, trimmed mean)
+      index: 0
+      sorting: asc
+      precision: 0
+      hidden: false
+      computation: null
+      computation_indexes: null
+      source: performance.timing.trimmed_mean_cpu_us
+      significant_figures: 3
+    - key: margin
+      title: Faster than csv-reader by (µs)
+      index: 1
+      sorting: desc
+      precision: 0
+      hidden: false
+      computation: baseline_margin
+      computation_indexes:
+        - 0
+      source: null
+    - key: speedup
+      title: Speedup over csv-reader (x)
+      index: 2
+      sorting: desc
+      precision: 2
+      hidden: false
+      computation: speedup
+      computation_indexes:
+        - 0
+      source: null
+      significant_figures: 3
+    - key: passed
+      title: Identical on every case
+      index: 3
+      sorting: desc
+      precision: 0
+      hidden: false
+      computation: null
+      computation_indexes: null
+      source: null
+    - key: cases_passed
+      title: Cases identical
+      index: 4
+      sorting: desc
+      precision: 0
+      hidden: false
+      computation: null
+      computation_indexes: null
+      source: null
+    - key: cases_total
+      title: Cases
+      index: 5
+      sorting: desc
+      precision: 0
+      hidden: true
+      computation: null
+      computation_indexes: null
+      source: null
+submission_rule:
+  rule: Force_Last
+  max_per_day: 10
+  max_total: 20
+  transcripts_required: false
+  strategy_note_required: false
+  license: osi
+  repo_created_after_open: true
+  house_only: false
+prizes:
+  - kind: placement
+    place: 1
+    amount_usd: 10
+    title: 1st place
+  - kind: placement
+    place: 2
+    amount_usd: 10
+    title: 2nd place
+  - kind: placement
+    place: 3
+    amount_usd: 10
+    title: 3rd place
+  - kind: placement
+    place: 4
+    amount_usd: 10
+    title: 4th place
+  - kind: placement
+    place: 5
+    amount_usd: 10
+    title: 5th place
+  - kind: placement
+    place: 6
+    amount_usd: 10
+    title: 6th place
+  - kind: placement
+    place: 7
+    amount_usd: 10
+    title: 7th place
+  - kind: placement
+    place: 8
+    amount_usd: 10
+    title: 8th place
+  - kind: placement
+    place: 9
+    amount_usd: 10
+    title: 9th place
+  - kind: placement
+    place: 10
+    amount_usd: 10
+    title: 10th place
+limits:
+  cpus: 1
+  memory_mb: 1024
+  pids: 64
+  wall_budget_sec: 10
+min_authored_coverage: 0
+prize_requires_beating_baseline: true
+house_holds_places: true
+automation:
+  lifecycle: true
+  payouts: auto
+  escrow: at_open

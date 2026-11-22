@@ -1,0 +1,168 @@
+{
+  "format": "agent-fun/kit/v1",
+  "competition": "csv-reader-speed-01-run-20261121",
+  "phase": "dev",
+  "bundle_sha256": "6a35685d320462fb0a864651472e2158f9ee49863a7c7096b0f84b0737947069",
+  "dataset_sha256": null,
+  "harness_version": "harness@c76b27afa9578c194377d748101d6b2456d0ec8582e95054b16ae39ea406c9d7 node v26.13.1",
+  "scorer_version": "scorer@060aa377b5319a6b52abfadd0092d854c38671c7e78e06ee827007b99b4dadd3 program@98d5f96f07e6794d494e0d1f51336fc4ee67ec10f2bcb666d3c28ddd45a6074b",
+  "pricing_rev": "6a262a9d0245fc1bb135c62775a6abd481aace3029ff2857a45310eb172ac899",
+  "protocol": "agent-fun/program/v1",
+  "files": [
+    {
+      "path": "RULES.txt",
+      "sha256": "4c9132fded33ca551ef2a33c7efb4165b89afbcc95889751ac8d79c0ce5fff3a",
+      "size": 60392
+    },
+    {
+      "path": "baselines/csv-reader/SOURCE.txt",
+      "sha256": "cc3400ad76714a841eeb63df91d72adebbc60d60a00ae3cc0c3eafa9105d8201",
+      "size": 969
+    },
+    {
+      "path": "baselines/csv-reader/main.ts",
+      "sha256": "884b8b2ffb9c1c309e0bcc455c8c832a5f1fd02ef79a4a008bc61993466a52fd",
+      "size": 1577
+    },
+    {
+      "path": "baselines/csv-reader/package.json",
+      "sha256": "3ca9d4afd21425087cf31893b8f9f63c81b0b8408db5e343ca76e5f8aa26ab9a",
+      "size": 23
+    },
+    {
+      "path": "baselines/csv-reader/solve.js",
+      "sha256": "9f837a9d9beba5e650c458614fdee60766cb87d09e040bb25c77d3e8b81c8c0b",
+      "size": 805
+    },
+    {
+      "path": "baselines/csv-reader/vendor/csv-reader/LICENSE",
+      "sha256": "e3b276fea38dd0896be15e76449046e9f6730ba2299f3149f478aa156d5c5cc4",
+      "size": 1065
+    },
+    {
+      "path": "baselines/csv-reader/vendor/csv-reader/NOTICE",
+      "sha256": "ceca9a49ab17e7242149378efc8611b1fbd7795928e62275abb151622cfca5a4",
+      "size": 2690
+    },
+    {
+      "path": "baselines/csv-reader/vendor/csv-reader/index.js",
+      "sha256": "40cbf19bc6baef1f9ca633f25b64eeb8d12627587622f1e9ecfa9881a132fdf0",
+      "size": 7162
+    },
+    {
+      "path": "baselines/csv-reader/vendor/csv-reader/package.json",
+      "sha256": "40c156be2bc6a9693cb68fdfe6e49275f47d5bdf93550da12d1e2ba0d346e110",
+      "size": 236
+    },
+    {
+      "path": "cli/makefun.mjs",
+      "sha256": "a757ad696f5485dcb429b608e8ea42cb34583a1d9e220d2ae7f18a7c24666312",
+      "size": 15937187
+    },
+    {
+      "path": "cli/site.json",
+      "sha256": "24c5afb0763ff96dd092a88869fee664366b444f1147e57527cc5fc1b54ab124",
+      "size": 35
+    },
+    {
+      "path": "competition.yaml",
+      "sha256": "99e0a1bacdc1879507b631720dd81b6d1d943a5174ebc37a9fb6295020d79ce7",
+      "size": 17981
+    },
+    {
+      "path": "harness/CODE.sha256",
+      "sha256": "8b7d2f6192739976baf2724ec1504211ed77b2c5df2d2b5bc607f22e2ba9cc3b",
+      "size": 20092
+    },
+    {
+      "path": "harness/SOURCES.sha256",
+      "sha256": "eab45b95dcb8e2ccdec98446a44a064a94a9c2145332b1552b311f6960435404",
+      "size": 20092
+    },
+    {
+      "path": "harness/harness-src.tar.gz",
+      "sha256": "f445879df2026541aab16f2dc7af9d4906b51f19e390691e515f6627099bd9d6",
+      "size": 2874102
+    },
+    {
+      "path": "harness/harness-src.tar.gz.sha256",
+      "sha256": "b1da0683ecb30ed005207a114cab84adf9bc07c3e68fdb921cc8ba9dec347013",
+      "size": 85
+    },
+    {
+      "path": "practice/input/cases.json",
+      "sha256": "ea5375f1d8045c04f49deefbeb91c4602aff610225024e3529d684d85243a99f",
+      "size": 11064623
+    },
+    {
+      "path": "practice/reference/expected.json",
+      "sha256": "631915a92682eb81ca4fdbae444a126f3df4dcb4d7335ee7bf51a6ebd09961dc",
+      "size": 12073593
+    },
+    {
+      "path": "program/generator/corpus.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "size": 3
+    },
+    {
+      "path": "program/generator/draw.ts",
+      "sha256": "00c7bcdb91fd2275ce36550dbe7ad0da08c14c9c786be1ada2a2f21f2627c415",
+      "size": 4079
+    },
+    {
+      "path": "program/generator/oracle.js",
+      "sha256": "af530e37fac44591b132d97c053a09150ec3a5aac0dc931dbdf8972117be6805",
+      "size": 760
+    },
+    {
+      "path": "program/generator/package.json",
+      "sha256": "3ca9d4afd21425087cf31893b8f9f63c81b0b8408db5e343ca76e5f8aa26ab9a",
+      "size": 23
+    },
+    {
+      "path": "program/generator/rng.ts",
+      "sha256": "c503dd225a00869c6c2f34e1849ae9e0ca7228f93a5657291d33535fd570d5fd",
+      "size": 2880
+    },
+    {
+      "path": "program/generator/subject/csv-cases.mjs",
+      "sha256": "fa1a90929c8d4723cf7c034ae8886d3dae58bff42a6f2e7ba8d555119253cd47",
+      "size": 8464
+    },
+    {
+      "path": "program/generator/vendor/SOURCE.txt",
+      "sha256": "cc3400ad76714a841eeb63df91d72adebbc60d60a00ae3cc0c3eafa9105d8201",
+      "size": 969
+    },
+    {
+      "path": "program/generator/vendor/csv-reader/LICENSE",
+      "sha256": "e3b276fea38dd0896be15e76449046e9f6730ba2299f3149f478aa156d5c5cc4",
+      "size": 1065
+    },
+    {
+      "path": "program/generator/vendor/csv-reader/NOTICE",
+      "sha256": "ceca9a49ab17e7242149378efc8611b1fbd7795928e62275abb151622cfca5a4",
+      "size": 2690
+    },
+    {
+      "path": "program/generator/vendor/csv-reader/index.js",
+      "sha256": "40cbf19bc6baef1f9ca633f25b64eeb8d12627587622f1e9ecfa9881a132fdf0",
+      "size": 7162
+    },
+    {
+      "path": "program/generator/vendor/csv-reader/package.json",
+      "sha256": "40c156be2bc6a9693cb68fdfe6e49275f47d5bdf93550da12d1e2ba0d346e110",
+      "size": 236
+    },
+    {
+      "path": "program/scorer/main.ts",
+      "sha256": "214d56949a367040316e5dd9ddb594bf2e54315690b5f51da0e26ef8afe97ce7",
+      "size": 5881
+    },
+    {
+      "path": "rules/instance.yaml",
+      "sha256": "abe239ad926862f0df4bb86b99d1dc05654db4342985113f45372dbc93b7c4e6",
+      "size": 1250
+    }
+  ]
+}
